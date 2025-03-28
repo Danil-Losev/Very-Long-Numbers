@@ -1,12 +1,9 @@
 #include "verylong.h"
-#include <cstdlib>
-#include <string.h>
-#include <iostream>
 
 vln::verylong::verylong()
 {
 	veryLongString = new char[SIZE];
-	veryLongSize = 0;
+	veryLongSize = 1;
 	veryLongString[SIZE - 1] = '0';
 }
 
@@ -48,6 +45,17 @@ vln::verylong::verylong(const char* input)
 char& vln::verylong::operator[](int index)
 {
 	return veryLongString[SIZE - veryLongSize + index];
+}
+
+char* vln::verylong::getVeryLongString()
+{
+	char* charVeryLongString = new char[veryLongSize + 1];
+	for (int i = SIZE - veryLongSize; i < SIZE; i++)
+	{
+		charVeryLongString[i - SIZE + veryLongSize] = veryLongString[i];
+	}
+	charVeryLongString[veryLongSize] = '\0';
+	return charVeryLongString;
 }
 
 bool vln::verylong::operator==(const vln::verylong& input) const
@@ -200,6 +208,136 @@ bool vln::verylong::operator>=(const vln::verylong& input) const
 	return isBiggerOrEqual;
 }
 
+vln::verylong vln::verylong::operator+(const vln::verylong& input) const
+{
+	vln::verylong result;
+	int carry = 0;
+	int resultSize = veryLongSize > input.veryLongSize ? veryLongSize : input.veryLongSize;
+	int firstSize = veryLongSize;
+	int secondSize = input.veryLongSize;
+	int sum = 0;
+	for (int i = SIZE - 1; i >= SIZE - resultSize; i--)
+	{
+		if (firstSize > 0)
+		{
+			sum += (int)(veryLongString[i] - '0');
+			firstSize--;
+		}
+		if (secondSize > 0)
+		{
+			sum += (int)(input.veryLongString[i] - '0');
+			secondSize--;
+		}
+		sum += carry;
+		if (sum >= 10)
+		{
+			carry = 1;
+			sum -= 10;
+		}
+		else
+		{
+			carry = 0;
+		}
+		result.veryLongString[i] = sum + '0';
+		sum = 0;
+	}
+	if (carry == 1)
+	{
+		result.veryLongString[SIZE - resultSize - 1] = '1';
+		result.veryLongSize = resultSize + 1;
+	}
+	else
+	{
+		result.veryLongSize = resultSize;
+	}
+	return result;
+}
+
+vln::verylong vln::verylong::operator-(const vln::verylong& input) const
+{
+	if (*this < input)
+	{
+		std::cout << "Error! The first number must be greater than the second!" << std::endl;
+		return vln::verylong();
+	}
+	vln::verylong result;
+	int resultSize = veryLongSize > input.veryLongSize ? veryLongSize : input.veryLongSize;
+	int firstSize = veryLongSize;
+	int secondSize = input.veryLongSize;
+	int difference = 0;
+	int borrow = 0;
+	for (int i = SIZE - 1; i >= SIZE - resultSize; i--)
+	{
+		if (firstSize > 0)
+		{
+			difference += (int)(veryLongString[i] - '0');
+			firstSize--;
+		}
+		if (secondSize > 0)
+		{
+			difference -= (int)(input.veryLongString[i] - '0');
+			secondSize--;
+		}
+		difference -= borrow;
+		if (difference < 0)
+		{
+			borrow = 1;
+			difference += 10;
+		}
+		else
+		{
+			borrow = 0;
+		}
+		result.veryLongString[i] = difference + '0';
+		difference = 0;
+	}
+	for (int i = SIZE - resultSize; i < SIZE - 1; i++)
+	{
+		if (result.veryLongString[i] - '0' == 0)
+		{
+			resultSize--;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	result.veryLongSize = resultSize;
+	return result;
+}
+
+
+vln::verylong vln::verylong::operator*(const vln::verylong& input) const
+{
+	vln::verylong result;
+	int carry = 0;
+	int resultSize = veryLongSize + input.veryLongSize;
+	for (int i = 0; i < resultSize; i++)
+	{
+		result.veryLongString[SIZE - 1 - i] = '0';
+	}
+	for (int i = 0; i < veryLongSize; i++)
+	{
+		carry = 0;
+		for (int j = 0; j < input.veryLongSize; j++)
+		{
+			int temp = (veryLongString[SIZE - 1 - i] - '0') * (input.veryLongString[SIZE - 1 - j] - '0') + (result.veryLongString[SIZE - 1 - (i + j)] - '0') + carry;
+			carry = temp / 10;
+			result.veryLongString[SIZE - 1 - (i + j)] = (temp % 10) + '0';
+		}
+		result.veryLongString[SIZE - 1 - (i + input.veryLongSize)] += carry;
+	}
+	while (resultSize > 1 && result.veryLongString[SIZE - resultSize] == '0')
+	{
+		resultSize--;
+	}
+	result.veryLongSize = resultSize;
+	return result;
+}
+
+
+
 std::istream& vln::operator>>(std::istream& in, vln::verylong& input)
 {
 	char* temp = new char[input.SIZE];
@@ -241,6 +379,11 @@ std::ostream& vln::operator<<(std::ostream& out, const vln::verylong& input)
 const int vln::verylong::getMaxSize()
 {
 	return SIZE;
+}
+
+const vln::verylong vln::verylong::getFactorial(int input)
+{
+	return input > 0 ? getFactorial(input - 1) * input : 1;
 }
 
 vln::verylong::~verylong()

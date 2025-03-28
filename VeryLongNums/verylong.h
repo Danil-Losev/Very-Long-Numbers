@@ -1,7 +1,8 @@
-#include <iostream>
-
 #if !defined(__VERYLONG_H__)
 #define __VERYLONG_H__
+
+#include <iostream>
+//#include <cstdlib>
 
 namespace vln {
 	class verylong
@@ -17,6 +18,7 @@ namespace vln {
 		verylong(const char* input);
 
 		char& operator[](int index);
+		char* getVeryLongString();
 
 		bool operator==(const vln::verylong& input)const;
 		bool operator!=(const vln::verylong& input)const;
@@ -30,10 +32,20 @@ namespace vln {
 		vln::verylong operator*(const vln::verylong& input)const;
 		vln::verylong operator/(const vln::verylong& input)const;
 
+		vln::verylong operator=(const vln::verylong& input);
+		
+		
+		
+		vln::verylong operator++();
+		vln::verylong operator++(int);
+		vln::verylong operator--();
+		vln::verylong operator--(int);
+
 		friend std::istream& operator>>(std::istream& in, vln::verylong& input);
 		friend std::ostream& operator<<(std::ostream& out, const vln::verylong& input);
 
 		static const int getMaxSize();
+		static const vln::verylong getFactorial(int input);
 
 		~verylong();
 	};
