@@ -1,20 +1,22 @@
-﻿// VeryLongNums.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+﻿#include "verylong.h"
 
-#include "verylong.h"
 
 using namespace vln;
 
 int main()
 {
-	
-	verylong a = verylong("123123123123");
-	verylong b = verylong("123123123123");
-	verylong c = a + b;
-	std::cout << c << std::endl;
+	verylong a, b, c;
+	std::cout << "Enter a: ";
+	std::cin >> a;
+	std::cout << "Enter b: ";
+	std::cin >> b;
+	c = a + b;
+	std::cout << "a + b = " << c << std::endl;
 	c = a - b;
-	std::cout << c << std::endl;
+	std::cout << "a - b = " << c << std::endl;
 	c = a * b;
-	std::cout << c << std::endl;
-
+	std::cout << "a * b = " << c << std::endl;
+	c = a / b;
+	std::cout << "a / b = " << c << std::endl;
+	return 0;
 }

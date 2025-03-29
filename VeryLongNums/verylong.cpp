@@ -18,7 +18,7 @@ vln::verylong::verylong(const vln::verylong& input)
 	}
 }
 
-vln::verylong::verylong(const long long input)
+vln::verylong::verylong(const unsigned long long input)
 {
 	veryLongString = new char[SIZE];
 	char temp[SIZE];
@@ -208,6 +208,28 @@ bool vln::verylong::operator>=(const vln::verylong& input) const
 	return isBiggerOrEqual;
 }
 
+bool vln::verylong::operator!() const
+{
+	if (veryLongSize == 1 && veryLongString[SIZE - 1] == '0')
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+vln::verylong vln::verylong::operator+(const unsigned long long input) const
+{
+	return *this + vln::verylong(input);
+}
+
+vln::verylong vln::verylong::operator-(const unsigned long long input) const
+{
+	return *this - vln::verylong(input);
+}
+
 vln::verylong vln::verylong::operator+(const vln::verylong& input) const
 {
 	vln::verylong result;
@@ -336,7 +358,83 @@ vln::verylong vln::verylong::operator*(const vln::verylong& input) const
 	return result;
 }
 
+vln::verylong vln::verylong::operator/(const vln::verylong& input) const // TODO: Fix division and add remainder
+{
+	if (*this == 0) return vln::verylong();
+	if (input == 0)
+	{
+		std::cout << "Error! Division by zero!" << std::endl;
+		return vln::verylong();
+	}
+	vln::verylong result;
+	vln::verylong temp = *this;
+	vln::verylong temp2 = input;
+	int resultSize = 0;
+	while (temp >= temp2)
+	{
+		temp = temp - temp2;
+		resultSize++;
+	}
+	result = (verylong)resultSize;
+	return result;
+}
 
+vln::verylong vln::verylong::operator=(const vln::verylong& input)
+{
+	if (this == &input)
+	{
+		return *this;
+	}
+	delete[] veryLongString;
+	veryLongString = new char[SIZE];
+	veryLongSize = input.veryLongSize;
+	for (int i = SIZE - veryLongSize; i < SIZE; i++)
+	{
+		veryLongString[i] = input.veryLongString[i];
+	}
+	return *this;
+}
+
+vln::verylong vln::verylong::operator=(const unsigned long long input)
+{
+	delete[] veryLongString;
+	veryLongString = new char[SIZE];
+	char temp[SIZE];
+	_ultoa_s(input, temp, 10);
+	int tempSize = strlen(temp);
+	veryLongSize = tempSize;
+	for (int i = 0; i < tempSize; i++)
+	{
+		veryLongString[SIZE - tempSize + i] = temp[i];
+	}
+	return *this;
+}
+
+vln::verylong vln::verylong::operator++()
+{
+	*this = *this + (verylong)1;
+	return *this;
+}
+
+vln::verylong vln::verylong::operator++(int)
+{
+	vln::verylong temp = *this;
+	*this = *this + (verylong)1;
+	return temp;
+}
+
+vln::verylong vln::verylong::operator--()
+{
+	*this = *this - (verylong)1;
+	return *this;
+}
+
+vln::verylong vln::verylong::operator--(int)
+{
+	vln::verylong temp = *this;
+	*this = *this - (verylong)1;
+	return temp;
+}
 
 std::istream& vln::operator>>(std::istream& in, vln::verylong& input)
 {
@@ -383,7 +481,38 @@ const int vln::verylong::getMaxSize()
 
 const vln::verylong vln::verylong::getFactorial(int input)
 {
-	return input > 0 ? getFactorial(input - 1) * input : 1;
+	return input > 0 ? (getFactorial(input - 1) * (verylong)input) : (verylong)1;
+}
+
+long long vln::verylong::getByteSize()
+{
+	return SIZE * sizeof(char) + sizeof(int) + sizeof(char*) + sizeof(const int);
+}
+
+vln::verylong::operator unsigned long long() const
+{
+	if (veryLongSize > 10)
+	{
+		std::cout << "Error! The number is too big!" << std::endl;
+		return 0;
+	}
+	long long result = 0;
+	for (int i = SIZE - veryLongSize; i < SIZE; i++)
+	{
+		result = result * 10 + (veryLongString[i] - '0');
+	}
+	return result;
+}
+
+vln::verylong::operator char* () const
+{
+	char* charVeryLongString = new char[veryLongSize + 1];
+	for (int i = SIZE - veryLongSize; i < SIZE; i++)
+	{
+		charVeryLongString[i - SIZE + veryLongSize] = veryLongString[i];
+	}
+	charVeryLongString[veryLongSize] = '\0';
+	return charVeryLongString;
 }
 
 vln::verylong::~verylong()
