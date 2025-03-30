@@ -1,22 +1,17 @@
 ﻿#include "verylong.h"
-
+#include "longint.h"
 
 using namespace vln;
 
 int main()
 {
-	verylong a, b, c;
-	std::cout << "Enter a: ";
+	longint a(1234567890);
 	std::cin >> a;
-	std::cout << "Enter b: ";
-	std::cin >> b;
-	c = a + b;
-	std::cout << "a + b = " << c << std::endl;
-	c = a - b;
-	std::cout << "a - b = " << c << std::endl;
-	c = a * b;
-	std::cout << "a * b = " << c << std::endl;
-	c = a / b;
-	std::cout << "a / b = " << c << std::endl;
+	std::cout << a << std::endl;
+	std::cout << a.getByteSize() << std::endl;
+	std::cout << a.getSize() << std::endl;
+	std::cout << a.getString() << std::endl;
+	std::cout << (long long)a << std::endl;
+	std::cout << (char*)a << std::endl;
 	return 0;
 }

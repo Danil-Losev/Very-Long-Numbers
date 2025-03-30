@@ -127,10 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="longint.cpp" />
     <ClCompile Include="verylong.cpp" />
     <ClCompile Include="VeryLongNums.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="longint.h" />
     <ClInclude Include="verylong.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
