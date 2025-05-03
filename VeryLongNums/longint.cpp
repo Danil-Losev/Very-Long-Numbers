@@ -62,6 +62,74 @@ char& longint::operator[](int index)
 	return string[index];
 }
 
+bool longint::operator==(const longint& input) const
+{
+	if (size != input.size || isNegative != input.isNegative)
+	{
+		return false;
+	}
+	for (int i = 0; i < size; i++)
+	{
+		if (string[i] != input.string[i])
+		{
+			return false;
+		}
+	}
+}
+
+bool longint::operator!=(const longint& input) const
+{
+	if (size != input.size || isNegative != input.isNegative)
+	{
+		return true;
+	}
+	for (int i = 0; i < size; i++)
+	{
+		if (string[i] != input.string[i])
+		{
+			return true;
+		}
+	}
+}
+
+bool longint::operator<(const longint& input) const
+{
+	if (isNegative && !input.isNegative)
+	{
+		return true;
+	}
+	if (!isNegative && input.isNegative)
+	{
+		return false;
+	}
+	if (size < input.size)
+	{
+		return !isNegative;
+	}
+	if (size > input.size)
+	{
+		return isNegative;
+	}
+	for (int i = 0; i < size; i++)
+	{
+		if (string[i] < input.string[i])
+		{
+			return !isNegative;
+		}
+		if (string[i] > input.string[i])
+		{
+			return isNegative;
+		}
+	}
+}
+
+bool longint::operator>(const longint& input) const
+{
+	if (isNegative && !input.isNegative) return false;
+	if (!isNegative && input.isNegative) return true;
+	if (size > input.size) return 
+}
+
 char* longint::getString()
 {
 	if (isNegative)
@@ -195,4 +263,9 @@ std::ostream& operator<<(std::ostream& out, const longint& input)
 		out << input.string[i];
 	}
 	return out;
+}
+
+bool longint::operator!() const
+{
+	return (size == 1 && string[0] == '0') ? true : false;
 }
